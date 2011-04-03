@@ -1,0 +1,68 @@
+PACKAGE
+
+package passwordhash
+
+Package passwordhash implements safe password hashing and comparison.
+
+Passwords are derived using PBKDF2 function with 5000 iterations (by default),
+with 32-byte salt and 64-byte output.
+
+
+CONSTANTS
+
+const (
+    // Default number of iterations for PBKDF2.
+    DefaultIterations = 5000
+    // Default salt length.
+    SaltLen = 32
+)
+
+
+TYPES
+
+type PasswordHash struct {
+    Iterations int
+    Salt       []byte
+    Hash       []byte
+}
+
+PasswordHash represents storage for password hash and salt.
+
+func New(password string) *PasswordHash
+
+New returns a new password hash derived from the provided password,
+a random salt, and the default number of iterations.
+
+func NewWithIterations(password string, iterations int) *PasswordHash
+
+NewWithIterations returns a new password hash derived from the provided
+password, number of iterations, and a random salt.
+
+func NewWithSaltIterations(password string, salt []byte, iterations int) *PasswordHash
+
+NewWithSaltIterations creates a new password hash from the provided password, salt,
+and the number of iterations.
+
+func (ph *PasswordHash) EqualToPassword(password string) bool
+
+EqualToPassword returns true if the password hash was derived from the provided password.
+This function uses constant time comparison.
+
+func (ph *PasswordHash) String() string
+
+String returns a string representation of the password hash.
+
+
+EXAMPLE
+
+	ph := New("hello, world")
+	// Store ph somewhere...
+	// Later, when user provides a password:
+	if ph.EqualToPassword("hello, world") {
+		// Password's okay, user authorized...
+	}
+
+
+NOTES
+
+Package requires http://github.com/dchest/pbkdf2.

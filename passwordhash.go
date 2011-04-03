@@ -1,7 +1,8 @@
 // Package passwordhash implements safe password hashing and comparison.
+//
 // Passwords are derived using PBKDF2 function with 5000 iterations (by default), 
 // with 32-byte salt and 64-byte output.
-package passwordhash 
+package passwordhash
 
 import (
 	"crypto/rand"
@@ -14,8 +15,8 @@ import (
 // PasswordHash represents storage for password hash and salt.
 type PasswordHash struct {
 	Iterations int
-	Salt []byte
-	Hash []byte
+	Salt       []byte
+	Hash       []byte
 }
 
 const (
@@ -40,8 +41,8 @@ func New(password string) *PasswordHash {
 	return NewWithSaltIterations(password, getSalt(), DefaultIterations)
 }
 
-// NewWithIterations returns a new password hash from the provided
-// password and number of iterations, and a random salt.
+// NewWithIterations returns a new password hash derived from the provided
+// password, number of iterations, and a random salt.
 func NewWithIterations(password string, iterations int) *PasswordHash {
 	return NewWithSaltIterations(password, getSalt(), iterations)
 }
@@ -62,6 +63,6 @@ func (ph *PasswordHash) EqualToPassword(password string) bool {
 
 // String returns a string representation of the password hash.
 func (ph *PasswordHash) String() string {
-	return fmt.Sprintf("&PasswordHash{Iterations: %d, Salt: %x, Hash: %x}", 
-			   ph.Iterations, ph.Salt, ph.Hash)	
+	return fmt.Sprintf("&PasswordHash{Iterations: %d, Salt: %x, Hash: %x}",
+		ph.Iterations, ph.Salt, ph.Hash)
 }
