@@ -51,7 +51,7 @@ func NewWithIterations(password string, iterations int) *PasswordHash {
 // and the number of iterations.
 func NewWithSaltIterations(password string, salt []byte, iterations int) *PasswordHash {
 	return &PasswordHash{iterations, salt,
-		pbkdf2.PBKDF2([]byte(password), salt, iterations, sha256.New, 64)}
+		pbkdf2.WithHMAC(sha256.New, []byte(password), salt, iterations, 64)}
 }
 
 // EqualToPassword returns true if the password hash was derived from the provided password.
