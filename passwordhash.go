@@ -14,15 +14,15 @@ import (
 
 // PasswordHash represents storage for password hash and salt.
 type PasswordHash struct {
-	Iterations int
-	Salt       []byte
-	Hash       []byte
+	Iter int
+	Salt []byte
+	Hash []byte
 }
 
 const (
-	// Default number of iterations for PBKDF2.
+	// Default number of iterations for PBKDF2
 	DefaultIterations = 5000
-	// Default salt length.
+	// Default salt length
 	SaltLen = 32
 )
 
@@ -38,31 +38,31 @@ func getSalt() []byte {
 // New returns a new password hash derived from the provided password, 
 // a random salt, and the default number of iterations.
 func New(password string) *PasswordHash {
-	return NewWithSaltIterations(password, getSalt(), DefaultIterations)
+	return NewSaltIter(password, getSalt(), DefaultIterations)
 }
 
-// NewWithIterations returns a new password hash derived from the provided
-// password, number of iterations, and a random salt.
-func NewWithIterations(password string, iterations int) *PasswordHash {
-	return NewWithSaltIterations(password, getSalt(), iterations)
+// NewIter returns a new password hash derived from the provided password,
+// the number of iterations, and a random salt.
+func NewIter(password string, iter int) *PasswordHash {
+	return NewSaltIter(password, getSalt(), iter)
 }
 
-// NewWithSaltIterations creates a new password hash from the provided password, salt,
+// NewSaltIter creates a new password hash from the provided password, salt,
 // and the number of iterations.
-func NewWithSaltIterations(password string, salt []byte, iterations int) *PasswordHash {
-	return &PasswordHash{iterations, salt,
-		pbkdf2.WithHMAC(sha256.New, []byte(password), salt, iterations, 64)}
+func NewSaltIter(password string, salt []byte, iter int) *PasswordHash {
+	return &PasswordHash{iter, salt,
+		pbkdf2.WithHMAC(sha256.New, []byte(password), salt, iter, 64)}
 }
 
 // EqualToPassword returns true if the password hash was derived from the provided password.
 // This function uses constant time comparison.
 func (ph *PasswordHash) EqualToPassword(password string) bool {
-	provided := NewWithSaltIterations(password, ph.Salt, ph.Iterations)
+	provided := NewSaltIter(password, ph.Salt, ph.Iter)
 	return subtle.ConstantTimeCompare(ph.Hash, provided.Hash) == 1
 }
 
 // String returns a string representation of the password hash.
 func (ph *PasswordHash) String() string {
 	return fmt.Sprintf("&PasswordHash{Iterations: %d, Salt: %x, Hash: %x}",
-		ph.Iterations, ph.Salt, ph.Hash)
+		ph.Iter, ph.Salt, ph.Hash)
 }

@@ -11,8 +11,8 @@ const (
 
 func TestPasswordHash(t *testing.T) {
 	p := New("hello, world")
-	if p.Iterations != DefaultIterations {
-		t.Errorf("Iterations: expected %d, got %d", DefaultIterations, p.Iterations)
+	if p.Iter != DefaultIterations {
+		t.Errorf("Iterations: expected %d, got %d", DefaultIterations, p.Iter)
 	}
 	if len(p.Hash) != hashLen {
 		t.Errorf("Hash length: expected %d, got %d", hashLen, len(p.Hash))
