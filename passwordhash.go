@@ -6,6 +6,16 @@
 // Note: you must not allow users to change parameters of PasswordHash, such as
 // the number of iterations, directly. If a malicious user can change the
 // number of iterations, he can set it too high, and it will lead to DoS.
+//
+// Example usage:
+//
+//	ph := New("hello, world")
+//	// Store ph somewhere...
+//	// Later, when user provides a password:
+//	if ph.EqualToPassword("hello, world") {
+//		// Password's okay, user authorized...
+//	}
+//
 package passwordhash
 
 import (
