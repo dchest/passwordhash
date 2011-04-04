@@ -41,6 +41,7 @@ const (
 )
 
 // getSalt returns a new random salt.
+// The function causes runtime panic if it fails to get random salt.
 func getSalt() []byte {
 	salt := make([]byte, SaltLen)
 	if _, err := rand.Reader.Read(salt); err != nil {
@@ -51,12 +52,14 @@ func getSalt() []byte {
 
 // New returns a new password hash derived from the provided password, 
 // a random salt, and the default number of iterations.
+// The function causes runtime panic if it fails to get random salt.
 func New(password string) *PasswordHash {
 	return NewSaltIter(password, getSalt(), DefaultIterations)
 }
 
 // NewIter returns a new password hash derived from the provided password,
 // the number of iterations, and a random salt.
+// The function causes runtime panic if it fails to get random salt.
 func NewIter(password string, iter int) *PasswordHash {
 	return NewSaltIter(password, getSalt(), iter)
 }
