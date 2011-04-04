@@ -63,6 +63,6 @@ func (ph *PasswordHash) EqualToPassword(password string) bool {
 
 // String returns a string representation of the password hash.
 func (ph *PasswordHash) String() string {
-	return fmt.Sprintf("&PasswordHash{Iterations: %d, Salt: %x, Hash: %x}",
+	return fmt.Sprintf("&PasswordHash{Iter: %d, Salt: %x, Hash: %x}",
 		ph.Iter, ph.Salt, ph.Hash)
 }
