@@ -2,6 +2,10 @@
 //
 // Passwords are derived using PBKDF2-HMAC-SHA256 function with 5000 iterations
 // (by default), 32-byte salt and 64-byte output.
+//
+// Note: you must not allow users to change parameters of PasswordHash, such as
+// the number of iterations, directly. If a malicious user can change the
+// number of iterations, he can set it too high, and it will lead to DoS.
 package passwordhash
 
 import (
