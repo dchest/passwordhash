@@ -38,6 +38,8 @@ const (
 	DefaultIterations = 5000
 	// Default salt length
 	SaltLen = 32
+	// Default hash length
+	HashLen = 64
 )
 
 // getSalt returns a new random salt.
@@ -68,7 +70,7 @@ func NewIter(password string, iter int) *PasswordHash {
 // and the number of iterations.
 func NewSaltIter(password string, salt []byte, iter int) *PasswordHash {
 	return &PasswordHash{iter, salt,
-		pbkdf2.WithHMAC(sha256.New, []byte(password), salt, iter, 64)}
+		pbkdf2.WithHMAC(sha256.New, []byte(password), salt, iter, HashLen)}
 }
 
 // EqualToPassword returns true if the password hash was derived from the provided password.
