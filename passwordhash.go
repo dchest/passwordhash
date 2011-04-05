@@ -46,7 +46,7 @@ const (
 // The function causes runtime panic if it fails to get random salt.
 func getSalt() []byte {
 	salt := make([]byte, SaltLen)
-	if _, err := rand.Reader.Read(salt); err != nil {
+	if _, err := rand.Read(salt); err != nil {
 		panic("can't read from random source: " + err.String())
 	}
 	return salt
