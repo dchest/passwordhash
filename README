@@ -27,7 +27,7 @@ type PasswordHash struct {
     Hash []byte
 }
 
-PasswordHash represents storage for password hash and salt.
+PasswordHash stores hash, salt, and number of iterations.
 
 func New(password string) *PasswordHash
 

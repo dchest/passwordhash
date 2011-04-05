@@ -26,7 +26,7 @@ import (
 	"github.com/dchest/pbkdf2"
 )
 
-// PasswordHash represents storage for password hash and salt.
+// PasswordHash stores hash, salt, and number of iterations.
 type PasswordHash struct {
 	Iter int
 	Salt []byte
