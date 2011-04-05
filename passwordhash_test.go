@@ -4,21 +4,16 @@ import (
 	"testing"
 )
 
-const (
-	saltLen = 32
-	hashLen = 64
-)
-
 func TestPasswordHash(t *testing.T) {
 	p := New("hello, world")
 	if p.Iter != DefaultIterations {
 		t.Errorf("Iterations: expected %d, got %d", DefaultIterations, p.Iter)
 	}
-	if len(p.Hash) != hashLen {
-		t.Errorf("Hash length: expected %d, got %d", hashLen, len(p.Hash))
+	if len(p.Hash) != HashLen {
+		t.Errorf("Hash length: expected %d, got %d", HashLen, len(p.Hash))
 	}
-	if len(p.Salt) != saltLen {
-		t.Errorf("Salt length: expected %d, got %d", saltLen, len(p.Salt))
+	if len(p.Salt) != SaltLen {
+		t.Errorf("Salt length: expected %d, got %d", SaltLen, len(p.Salt))
 	}
 	if !p.EqualToPassword("hello, world") {
 		t.Errorf("passwords are not equal, expected equal")
