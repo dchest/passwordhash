@@ -1,6 +1,6 @@
 // Package passwordhash implements safe password hashing and comparison.
 //
-// Passwords are derived using PBKDF2-HMAC-SHA256 function with 5000 iterations
+// Hashes are derived using PBKDF2-HMAC-SHA256 function with 5000 iterations
 // (by default), 32-byte salt and 64-byte output.
 //
 // Note: you must not allow users to change parameters of PasswordHash, such as
