@@ -24,6 +24,7 @@ import (
 	"crypto/subtle"
 	"fmt"
 	"github.com/dchest/pbkdf2"
+	"io"
 )
 
 // PasswordHash stores hash, salt, and number of iterations.
@@ -46,8 +47,8 @@ const (
 // The function causes runtime panic if it fails to get random salt.
 func getSalt() []byte {
 	salt := make([]byte, SaltLen)
-	if _, err := rand.Read(salt); err != nil {
-		panic("can't read from random source: " + err.String())
+	if _, err := io.ReadFull(rand.Reader, salt); err != nil {
+		panic("error reading from random source: " + err.String())
 	}
 	return salt
 }
