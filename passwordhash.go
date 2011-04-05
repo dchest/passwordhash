@@ -9,7 +9,7 @@
 //
 // Example usage:
 //
-//	ph := New("hello, world")
+//	ph := passwordhash.New("hello, world")
 //	// Store ph somewhere...
 //	// Later, when user provides a password:
 //	if ph.EqualToPassword("hello, world") {
