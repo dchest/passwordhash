@@ -44,7 +44,7 @@ const (
 )
 
 // getSalt returns a new random salt.
-// The function causes runtime panic if it fails to get random salt.
+// The function causes runtime panic if it fails to read from random source.
 func getSalt() []byte {
 	salt := make([]byte, SaltLen)
 	if _, err := io.ReadFull(rand.Reader, salt); err != nil {
