@@ -78,6 +78,9 @@ func NewSaltIter(password string, salt []byte, iter int) *PasswordHash {
 // This function uses constant time comparison.
 func (ph *PasswordHash) EqualToPassword(password string) bool {
 	provided := NewSaltIter(password, ph.Salt, ph.Iter)
+	if len(ph.Hash) != len(provided.Hash) {
+		return false
+	}
 	return subtle.ConstantTimeCompare(ph.Hash, provided.Hash) == 1
 }
 
