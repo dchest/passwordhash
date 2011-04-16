@@ -1,7 +1,7 @@
-PACKAGE
+Package passwordhash
+=====================
 
-package passwordhash
-import "github.com/dchest/passwordhash"
+	import "github.com/dchest/passwordhash"
 
 Package passwordhash implements safe password hashing and comparison.
 
@@ -22,54 +22,64 @@ Example usage:
 	}
 
 
-CONSTANTS
+Constants
+---------
 
-const (
-    // Default number of iterations for PBKDF2
-    DefaultIterations = 5000
-    // Default salt length
-    SaltLen = 32
-    // Default hash length
-    HashLen = 64
-)
+	const (
+	    // Default number of iterations for PBKDF2
+	    DefaultIterations = 5000
+	    // Default salt length
+	    SaltLen = 32
+	    // Default hash length
+	    HashLen = 64
+	)
 
 
-TYPES
 
-type PasswordHash struct {
-    Iter int
-    Salt []byte
-    Hash []byte
-}
+Types
+-----
+
+	type PasswordHash struct {
+	    Iter int
+	    Salt []byte
+	    Hash []byte
+	}
+	
 PasswordHash stores hash, salt, and number of iterations.
 
-func New(password string) *PasswordHash
+### func New
 
+	func New(password string) *PasswordHash
+	
 New returns a new password hash derived from the provided password,
 a random salt, and the default number of iterations.
 The function causes runtime panic if it fails to get random salt.
 
-func NewIter(password string, iter int) *PasswordHash
+### func NewIter
 
+	func NewIter(password string, iter int) *PasswordHash
+	
 NewIter returns a new password hash derived from the provided password,
 the number of iterations, and a random salt.
 The function causes runtime panic if it fails to get random salt.
 
-func NewSaltIter(password string, salt []byte, iter int) *PasswordHash
+### func NewSaltIter
 
+	func NewSaltIter(password string, salt []byte, iter int) *PasswordHash
+	
 NewSaltIter creates a new password hash from the provided password, salt,
 and the number of iterations.
 
-func (ph *PasswordHash) EqualToPassword(password string) bool
+### func (*PasswordHash) EqualToPassword
 
+	func (ph *PasswordHash) EqualToPassword(password string) bool
+	
 EqualToPassword returns true if the password hash was derived from the provided password.
 This function uses constant time comparison.
 
-func (ph *PasswordHash) String() string
+### func (*PasswordHash) String
 
+	func (ph *PasswordHash) String() string
+	
 String returns a string representation of the password hash.
 
-
-NOTES
-
-Package requires http://github.com/dchest/pbkdf2.
