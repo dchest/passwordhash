@@ -48,7 +48,7 @@ const (
 func getSalt() []byte {
 	salt := make([]byte, SaltLen)
 	if _, err := io.ReadFull(rand.Reader, salt); err != nil {
-		panic("error reading from random source: " + err.String())
+		panic("error reading from random source: " + err.Error())
 	}
 	return salt
 }
