@@ -23,8 +23,9 @@ import (
 	"crypto/sha256"
 	"crypto/subtle"
 	"fmt"
-	"github.com/dchest/pbkdf2"
 	"io"
+
+	"code.google.com/p/go.crypto/pbkdf2"
 )
 
 // PasswordHash stores hash, salt, and number of iterations.
@@ -71,7 +72,7 @@ func NewIter(password string, iter int) *PasswordHash {
 // and the number of iterations.
 func NewSaltIter(password string, salt []byte, iter int) *PasswordHash {
 	return &PasswordHash{iter, salt,
-		pbkdf2.WithHMAC(sha256.New, []byte(password), salt, iter, HashLen)}
+		pbkdf2.Key([]byte(password), salt, iter, HashLen, sha256.New)}
 }
 
 // EqualToPassword returns true if the password hash was derived from the provided password.
