@@ -2,13 +2,11 @@
 //
 // THIS PACKAGE IS DEPRECATED. SEE README.
 //
-// To retain compatibility with previously generated hashes while avoiding the
-// 2x speedup attack, please import
-// "github.com/dchest/passwordhash/fixed/passwordhash"
-// instead of this package
+// Hashes are derived using PBKDF2-HMAC-SHA256 function with 100000 iterations
+// (by default), 32-byte salt and 32-byte output.
 //
-// Hashes are derived using PBKDF2-HMAC-SHA256 function with 5000 iterations
-// (by default), 32-byte salt and 64-byte output.
+// This packaged is a fixed version of "passwordhash" which uses only 32 bytes
+// of hash for comparison.
 //
 // Note: you must not allow users to change parameters of PasswordHash, such as
 // the number of iterations, directly. If a malicious user can change the
@@ -44,11 +42,12 @@ type PasswordHash struct {
 
 const (
 	// Default number of iterations for PBKDF2
-	DefaultIterations = 5000
+	DefaultIterations = 100000
 	// Default salt length
 	SaltLen = 32
-	// Default hash length
-	HashLen = 64
+	// Default hash length. This length is also used for hash comparison
+	// irregardless of the actual hash length.
+	HashLen = 32
 )
 
 // getSalt returns a new random salt.
@@ -61,7 +60,7 @@ func getSalt() []byte {
 	return salt
 }
 
-// New returns a new password hash derived from the provided password, 
+// New returns a new password hash derived from the provided password,
 // a random salt, and the default number of iterations.
 // The function causes runtime panic if it fails to get random salt.
 func New(password string) *PasswordHash {
@@ -84,12 +83,18 @@ func NewSaltIter(password string, salt []byte, iter int) *PasswordHash {
 
 // EqualToPassword returns true if the password hash was derived from the provided password.
 // This function uses constant time comparison.
+//
+// IMPORTANT: To work around the 2x speedup attack, this function compares only
+// the first 32 bytes of the given password hash.
 func (ph *PasswordHash) EqualToPassword(password string) bool {
 	provided := NewSaltIter(password, ph.Salt, ph.Iter)
-	if len(ph.Hash) != len(provided.Hash) {
+	if len(ph.Hash) < HashLen {
 		return false
 	}
-	return subtle.ConstantTimeCompare(ph.Hash, provided.Hash) == 1
+	if len(provided.Hash) != HashLen {
+		return false
+	}
+	return subtle.ConstantTimeCompare(ph.Hash[:HashLen], provided.Hash) == 1
 }
 
 // String returns a string representation of the password hash.

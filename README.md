@@ -1,85 +1,28 @@
-Package passwordhash
-=====================
+WARNING
+=======
 
-	import "github.com/dchest/passwordhash"
+**This package is deprecated! Do not use for new projects.**
 
-Package passwordhash implements safe password hashing and comparison.
+Instead of it, use scrypt or bcrypt from the official go.crypto repository:
 
-Hashes are derived using PBKDF2-HMAC-SHA256 function with 5000 iterations
-(by default), 32-byte salt and 64-byte output.
+* https://code.google.com/p/go/source/browse/scrypt/?repo=crypto
+* https://code.google.com/p/go/source/browse/bcrypt/?repo=crypto
 
-Note: you must not allow users to change parameters of PasswordHash, such as
-the number of iterations, directly. If a malicious user can change the
-number of iterations, he can set it too high, and it will lead to DoS.
+**Drawbacks of this package are:**
 
-Example usage:
+1. Deriving 64-byte output from HMAC-SHA256-PBKDF2 allows for 2x speedup of attacks
+  (PBKDF2 takes twice as long to derive 64 bytes, but attackers only need to derive 32 bytes to compare matches).
 
-	ph := passwordhash.New("hello, world")
-	// Store ph somewhere...
-	// Later, when user provides a password:
-	if ph.EqualToPassword("hello, world") {
-		// Password's okay, user authorized...
-	}
+2. Default number of iterations (5000) is too low for most uses.
+
+3. Currenly Go's SHA256 implementation is too slow.
 
 
-Constants
----------
+If you use this package, but do not use full 64-byte output for any purposes
+other than what this package provides, please switch import to:
 
-	const (
-	    // Default number of iterations for PBKDF2
-	    DefaultIterations = 5000
-	    // Default salt length
-	    SaltLen = 32
-	    // Default hash length
-	    HashLen = 64
-	)
+	import "github.com/dchest/passwordhash/fixed/passwordhash"
 
-
-
-Types
------
-
-	type PasswordHash struct {
-	    Iter int
-	    Salt []byte
-	    Hash []byte
-	}
-	
-PasswordHash stores hash, salt, and number of iterations.
-
-### func New
-
-	func New(password string) *PasswordHash
-	
-New returns a new password hash derived from the provided password,
-a random salt, and the default number of iterations.
-The function causes runtime panic if it fails to get random salt.
-
-### func NewIter
-
-	func NewIter(password string, iter int) *PasswordHash
-	
-NewIter returns a new password hash derived from the provided password,
-the number of iterations, and a random salt.
-The function causes runtime panic if it fails to get random salt.
-
-### func NewSaltIter
-
-	func NewSaltIter(password string, salt []byte, iter int) *PasswordHash
-	
-NewSaltIter creates a new password hash from the provided password, salt,
-and the number of iterations.
-
-### func (*PasswordHash) EqualToPassword
-
-	func (ph *PasswordHash) EqualToPassword(password string) bool
-	
-EqualToPassword returns true if the password hash was derived from the provided password.
-This function uses constant time comparison.
-
-### func (*PasswordHash) String
-
-	func (ph *PasswordHash) String() string
-	
-String returns a string representation of the password hash.
-
+The "fixed" version uses only the first 32 bytes of hash comparison to avoid
+the speedup attack, and the default number of iterations is increased to
+100000.
